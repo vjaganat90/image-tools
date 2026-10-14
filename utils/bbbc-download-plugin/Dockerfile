@@ -1,5 +1,11 @@
 FROM python:3.13-slim
 
+# Trust current CAs: refresh the system bundle (OpenSSL) and certifi (requests).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip3 install --no-cache-dir --upgrade certifi
+
 # environment variables defined in polusai/bfio
 ENV EXEC_DIR="/opt/executables"
 ENV POLUS_IMG_EXT=".ome.tif"
