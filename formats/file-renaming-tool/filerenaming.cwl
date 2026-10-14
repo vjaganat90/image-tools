@@ -28,7 +28,7 @@ outputs:
     type: Directory
 requirements:
   DockerRequirement:
-    dockerPull: polusai/file-renaming-tool:0.2.5
+    dockerPull: polusai/file-renaming-tool:0.2.6-dev0
   InitialWorkDirRequirement:
     listing:
     - entry: $(inputs.outDir)
