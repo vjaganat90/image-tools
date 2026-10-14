@@ -1,18 +1,19 @@
-FROM tensorflow/tensorflow:2.15.0-gpu
+FROM tensorflow/tensorflow:2.21.0-gpu
 
 # Install Python 3.12 from source (not available in deadsnakes PPA for Ubuntu 20.04)
 RUN apt update && \
     apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev \
-    libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev liblzma-dev curl git && \
+    libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev liblzma-dev curl git \
+    ca-certificates && \
     cd /tmp && \
-    wget https://www.python.org/ftp/python/3.12.7/Python-3.12.7.tgz && \
-    tar -xzf Python-3.12.7.tgz && \
-    cd Python-3.12.7 && \
+    wget https://www.python.org/ftp/python/3.12.15/Python-3.12.15.tgz && \
+    tar -xzf Python-3.12.15.tgz && \
+    cd Python-3.12.15 && \
     ./configure --enable-optimizations --prefix=/usr/local && \
     make -j$(nproc) && \
     make altinstall && \
     cd / && \
-    rm -rf /tmp/Python-3.12.7* && \
+    rm -rf /tmp/Python-3.12.15* && \
     apt remove -y build-essential wget && \
     apt autoremove -y && \
     rm -rf /var/lib/apt/lists/*
@@ -45,7 +46,7 @@ COPY . ${EXEC_DIR}/image-tools
 # Install the tool
 WORKDIR ${EXEC_DIR}/image-tools/${TOOL_DIR}
 # Fresh get-pip can lag; upgrade pip for PEP 517 / git URL dependency handling.
-RUN pip3 install --upgrade pip && pip3 install . --no-cache-dir
+RUN pip3 install --upgrade pip certifi && pip3 install . --no-cache-dir
 WORKDIR ${EXEC_DIR}
 
 # Set the entrypoint
