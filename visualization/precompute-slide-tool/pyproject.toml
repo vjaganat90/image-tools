@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "polus-images-visualization-precompute-slide"
-version = "1.7.3-dev0"
+version = "1.7.3-dev1"
 description = "Polus Precompute Slide Plugin."
 authors = [
     "Madhuri Vihani <Madhuri.Vihani@nih.gov>",
@@ -15,9 +15,9 @@ packages = [ { include = "polus", from = "src" } ]
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
 typer = "^0.7.0"
+click = "<8.2"  # typer 0.7 parses no option values with click 8.2+
 numpy = "~1.25.2"
 bfio = { version = "2.4.5", extras = ["all"] }
-preadator = "0.4.0.dev2"
 filepattern = "^2.0.4"
 imageio = "^2.36.1"
 

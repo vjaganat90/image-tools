@@ -10,7 +10,6 @@ import bfio
 import imageio
 import numcodecs
 import numpy
-import preadator
 import zarr
 
 from . import chunk_encoder
@@ -108,9 +107,8 @@ class PyramidWriter(abc.ABC):
 
     def write_slide(self) -> None:
         """Write the slide."""
-        with preadator.ProcessManager(name="write_slide") as pm:
-            logger.debug(f"submitting process for writing slide {self.image_path}")
-            pm.submit_process(self._write_slide)
+        logger.debug(f"writing slide {self.image_path}")
+        self._write_slide()
 
     @abc.abstractmethod
     def _write_slide(self) -> None:
@@ -274,7 +272,6 @@ def _get_higher_res(
             sub_image,
         )
 
-    # with preadator.ProcessManager(name="get_higher_res") as pm:
     for y_ in range(0, len(subgrid_dims[1]) - 1):
         y_ind = [
             subgrid_dims[1][y_] - subgrid_dims[1][0],
@@ -287,7 +284,6 @@ def _get_higher_res(
                 subgrid_dims[0][x_ + 1] - subgrid_dims[0][0],
             ]
             x_ind = [numpy.ceil(xi / 2).astype("int") for xi in x_ind]
-            # pm.submit_thread(
             load_and_scale(
                 image,
                 x_ind,
