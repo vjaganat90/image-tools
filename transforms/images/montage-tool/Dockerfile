@@ -1,5 +1,12 @@
 # Build from repo root (monorepo) or from this tool directory — both work.
 FROM polusai/bfio:2.5.0
+
+# Trust current CAs: refresh the system bundle (OpenSSL) and certifi (requests).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip3 install --no-cache-dir --upgrade certifi
+
 ENV EXEC_DIR="/opt/executables" POLUS_IMG_EXT=".ome.tif" POLUS_TAB_EXT=".csv" POLUS_LOG="INFO"
 WORKDIR ${EXEC_DIR}
 ENV TOOL_DIR="transforms/images/montage-tool"
