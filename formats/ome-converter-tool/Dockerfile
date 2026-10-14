@@ -1,5 +1,17 @@
 FROM polusai/bfio:2.5.0
 
+# Trust current CAs: refresh the system bundle (OpenSSL) and certifi (requests).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip3 install --no-cache-dir --upgrade certifi
+
+# bfio starts its Bio-Formats JVM through scyjava, which fetches a JRE and Maven with
+# cjdk into $HOME/.cache/cjdk. Fetch them once into a shared cache whose index never
+# expires, so a run as any user with any HOME (a CWL runner's) needs no network.
+ENV CJDK_CACHE_DIR=/opt/cjdk CJDK_INDEX_TTL=inf
+RUN python3 -c 'import bfio; bfio.start()' && chmod -R a+rwX /opt/cjdk
+
 # environment variables defined in polusai/bfio
 ENV EXEC_DIR="/opt/executables"
 ENV POLUS_IMG_EXT=".ome.tif"
