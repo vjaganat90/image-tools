@@ -1,6 +1,6 @@
 """Image Assembler Plugin."""
 
-__version__ = "1.4.3"
+__version__ = "1.4.4-dev0"
 
 from .image_assembler import (  # noqa
     assemble_images,
